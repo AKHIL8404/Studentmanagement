@@ -1,5 +1,5 @@
-# Use an official OpenJDK runtime as the base image
-FROM openjdk:17-jdk-slim
+# Stage 1: Build the application using Maven
+FROM maven:3.9.1-eclipse-temurin-17 AS build
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -8,14 +8,17 @@ WORKDIR /app
 COPY pom.xml /app/
 COPY src /app/src
 
-# Build the application (skip tests to speed up the build process)
-RUN mvn clean package -DskipTests
+# Build the application (skip tests to speed up the build process) and output build logs
+RUN mvn clean package -DskipTests -X
 
-# Add a debug step to list the contents of the target directory to check if the JAR file exists
-RUN ls -l target/
+# Stage 2: Create the final image with only the JAR file
+FROM openjdk:17-jdk-slim
 
-# Copy the generated JAR file from the target directory
-COPY target/StudentManagement1-0.0.1-SNAPSHOT.jar app.jar
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy the JAR file from the build stage
+COPY --from=build /app/target/StudentManagement1-0.0.1-SNAPSHOT.jar app.jar
 
 # Expose the port that the Spring Boot application runs on (default is 8080)
 EXPOSE 8080
