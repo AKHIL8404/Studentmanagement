@@ -22,6 +22,11 @@ public class StudentController {
 //		this.studentService = studentService;
 //	}
 
+	@GetMapping("/")
+	public String homepage(Model model) {
+		model.addAttribute("students", studentService.getAllStudents());
+		return "index";
+	}
 	@GetMapping("/students")
 	public String listStudents(Model model) {
 		model.addAttribute("students", studentService.getAllStudents());
