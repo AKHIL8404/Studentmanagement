@@ -11,7 +11,7 @@ COPY src /app/src
 # Build the application (skip tests to speed up the build process)
 RUN mvn clean package -DskipTests
 
-# Copy the jar file from the target folder after the build
+# Copy the generated JAR file from the target directory
 COPY target/studentmanagement-0.0.1-SNAPSHOT.jar app.jar
 
 # Expose the port that the Spring Boot application runs on (default is 8080)
