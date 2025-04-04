@@ -11,6 +11,9 @@ COPY src /app/src
 # Build the application (skip tests to speed up the build process)
 RUN mvn clean package -DskipTests
 
+# Add a debug step to list the contents of the target directory to check if the JAR file exists
+RUN ls -l target/
+
 # Copy the generated JAR file from the target directory
 COPY target/StudentManagement1-0.0.1-SNAPSHOT.jar app.jar
 
